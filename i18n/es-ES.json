@@ -222,7 +222,19 @@
 		"deleteMessageIntro": " ¿Está seguro de que desea eliminar esta cuenta (\"{{variable}}\")?",
 		"deleteMessageExplanation": " Por favor, escriba la palabra \"{{variable}}\" en la siguiente entrada y, a continuación, haga clic en el botón Borrar para continuar"
 	},
-
+	"deleteAccountPreDialog": {
+		"title": "Verificación de recursos de la cuenta",
+		"continueBtn": "Continuar",
+		"singularWords": ["hay", "número"],
+		"pluralWords": ["hay", "números"],
+		"e911Check1": "Verificando si se han eliminado los servicios e911 de la cuenta...",
+		"e911Check2": "Hay <strong>{{count}}</strong> {{word2}} con servicio e911 activado. Por favor, elimina todos los servicios e911 para continuar.",
+		"e911Check3": "No quedan servicios e911 en la cuenta.",
+		"numbersCheck1": "Verificando si todos los números se han eliminado de la cuenta...",
+		"numbersCheck2": "Hay <strong>{{count}}</strong> {{word2}} en la cuenta. Por favor, elimina todos los números para continuar.",
+		"numbersCheck3": "No quedan números en la cuenta.",
+		"apiError": "Ocurrió un error al verificar los recursos de la cuenta. Por favor, inténtalo de nuevo más tarde."
+	},
 	"__comment": "UI-1609: Add a way to Remove Credit",
 	"__version": "3.21",
 	"updateCreditDialog": {

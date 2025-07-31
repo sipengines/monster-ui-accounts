@@ -1251,3 +1251,72 @@
 .account-browser-breadcrumbs .account-browser-breadcrumb:not(:last-child) a {
 	color: #606069;
 }
+
+/* Pre-account Deletion */
+.pre-dialog-loader {
+    width: 35px;
+    height: 35px;
+    border: 5px solid #686868;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.pre-dialog-check {
+  display: none;
+  transform: rotate(45deg);
+  height: 32px;
+  width: 16px;
+  border-bottom: 7px solid #78b13f;
+  border-right: 7px solid #78b13f;
+}
+
+.pre-dialog-x {
+  display: none;
+  height: 35px;
+  width: 35px;
+  position: relative;
+  &:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "\274c";
+    font-size: 35px;
+    color: #fff;
+    line-height: 35px;
+    text-align: center;
+  }
+}
+
+.delete-account-pre-dialog {
+	table {
+		width: 100%;
+		tr.e911-check {
+			td {
+				padding-right: 10px;
+				padding-bottom: 15px;
+				text-align: left;
+			}
+		}
+		tr.numbers-check {
+			td {
+				padding-right: 10px;
+				text-align: left;
+			}
+		}
+	}
+}
+

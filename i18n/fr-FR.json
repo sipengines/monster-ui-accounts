@@ -220,6 +220,19 @@
 		"deleteMessageIntro": "Souhaitez-vous réellement supprimer ce compte (\"{{variable}}\")? Cette action ne pourra pas être annulée par la suite.",
 		"deleteMessageExplanation": "Veuillez taper le mot \"{{variable}}\" dans la case suivante, et cliquez ensuite sur le bouton Supprimer pour continuer"
 	},
+	"deleteAccountPreDialog": {
+		"title": "Vérification des ressources du compte",
+		"continueBtn": "Continuer",
+		"singularWords": ["y a", "numéro"],
+		"pluralWords": ["y a", "numéros"],
+		"e911Check1": "Vérification si les services e911 ont été supprimés du compte…",
+		"e911Check2": "Il y a <strong>{{count}}</strong> {{word2}} avec service e911 activé. Veuillez supprimer tous les services e911 pour continuer.",
+		"e911Check3": "Aucun service e911 restant dans le compte.",
+		"numbersCheck1": "Vérification si tous les numéros ont été supprimés du compte…",
+		"numbersCheck2": "Il y a <strong>{{count}}</strong> {{word2}} dans le compte. Veuillez supprimer tous les numéros pour continuer.",
+		"numbersCheck3": "Aucun numéro restant dans le compte.",
+		"apiError": "Une erreur s’est produite lors de la vérification des ressources du compte. Veuillez réessayer plus tard."
+	},
 	"__comment": "UI-1609: Add a way to Remove Credit",
 	"__version": "3.21",
 	"updateCreditDialog": {

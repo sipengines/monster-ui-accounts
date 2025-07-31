@@ -224,7 +224,19 @@
 		"deleteMessageIntro": "This action CANNOT be undone. This will permanently delete the \"{{variable}}\" account, release all phone numbers, deactivate any mobile devices and remove any provisioning files.",
 		"deleteMessageExplanation": "Please type the word \"{{variable}}\" in the following input and then click on the Delete Account button to proceed."
 	},
-
+	"deleteAccountPreDialog": {
+		"title": "Account Resource Check",
+		"continueBtn": "Continue",
+		"singularWords": ["is", "number"],
+		"pluralWords": ["are", "numbers"],
+		"e911Check1": "Verifying if e911 services have been removed from the account...",
+		"e911Check2": "There {{word1}} <strong>{{count}}</strong> {{word2}} with e911 service enabled. Please remove all e911 services to proceed.",
+		"e911Check3": "No e911 services remain in the account.",
+		"numbersCheck1": "Verifying if all numbers have been removed from the account...",
+		"numbersCheck2": "There {{word1}} <strong>{{count}}</strong> {{word2}} remaining in the account. Please remove all numbers to proceed.",
+		"numbersCheck3": "No numbers remain in the account.",
+		"apiError": "An error occurred while checking account resources. Please try again later."
+	},
 	"__comment": "UI-1609: Add a way to Remove Credit",
 	"__version": "3.21",
 	"updateCreditDialog": {

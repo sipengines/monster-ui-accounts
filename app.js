@@ -1354,23 +1354,107 @@ define(function(require) {
 			});
 
 			contentTemplate.find('#accountsmanager_delete_account_btn').on('click', function(e) {
-				self.confirmDeleteDialog(accountData.name, function() {
-					self.deleteAccount({
-						data: {
-							accountId: accountData.id,
-							generateError: false
-						},
-						success: function(data, status) {
-							parent.find('.main-content').empty();
-							parent.find('.account-list-element[data-id="' + accountData.id + '"]').remove();
-							parent.find('.account-browser-breadcrumbs .account-browser-breadcrumb').last().remove();
-						},
-						error: function(parsedError) {
-							if (parsedError.message === 'account_has_descendants') {
-								monster.ui.alert('error', self.i18n.active().account_has_descendants);
-							}
-						}
-					});
+				// Perform account resource checks before calling the normal deletion routine
+				preDeletePopup = monster.ui.confirm(
+					$(self.getTemplate({name: 'deleteAccountPreDialog'})),
+					() => {
+						// proceed with normal deletion routine when the check is successful
+						self.confirmDeleteDialog(accountData.name, function() {
+							self.deleteAccount({
+								data: {
+									accountId: accountData.id,
+									generateError: false
+								},
+								success: function(data, status) {
+									parent.find('.main-content').empty();
+									parent.find('.account-list-element[data-id="' + accountData.id + '"]').remove();
+									parent.find('.account-browser-breadcrumbs .account-browser-breadcrumb').last().remove();
+								},
+								error: function(parsedError) {
+									if (parsedError.message === 'account_has_descendants') {
+										monster.ui.alert('error', self.i18n.active().account_has_descendants);
+									}
+								}
+							});
+						});
+					},
+					null,
+					{
+						title: self.i18n.active().deleteAccountPreDialog.title,
+						confirmButtonText: self.i18n.active().deleteAccountPreDialog.continueBtn,
+						htmlContent: true
+					}
+				);
+
+				preDeletePopup.find('#confirm_button').prop('disabled', true);
+				$('.ui-dialog .ui-dialog-title i.fa').removeClass('fa-question-circle');
+				$('.ui-dialog .ui-dialog-title i.fa').addClass('fa-list-ul');
+
+				const performChecks = (error, numbers) => {
+					
+					if (error) {
+						monster.ui.alert('error', self.i18n.active().deleteAccountPreDialog.apiError);
+						return;
+					}
+
+					let e911Exists = 0;
+					const numbersExists = Object.keys(numbers).length;
+					for (const number of Object.keys(numbers)) {
+						if (numbers[number].features.indexOf('e911') >= 0) e911Exists++;
+					}
+
+					preDeletePopup.find('tr.e911-check .pre-dialog-loader').css('display', 'none');
+					if (!!e911Exists) {
+						preDeletePopup.find('tr.e911-check .pre-dialog-x').css('display', 'block');
+						preDeletePopup.find('tr.e911-check .pre-dialog-message')
+							.html(self.i18n.active().deleteAccountPreDialog.e911Check2
+							.replace('{{word1}}', (e911Exists > 1) 
+								? self.i18n.active().deleteAccountPreDialog.pluralWords[0]
+								: self.i18n.active().deleteAccountPreDialog.singularWords[0])
+							.replace('{{count}}', e911Exists)
+							.replace('{{word2}}', (e911Exists > 1)
+								? self.i18n.active().deleteAccountPreDialog.pluralWords[1]
+								: self.i18n.active().deleteAccountPreDialog.singularWords[1])
+							);
+					} else {
+						preDeletePopup.find('tr.e911-check .pre-dialog-check').css('display', 'block');
+						preDeletePopup.find('tr.e911-check .pre-dialog-message')
+							.html(self.i18n.active().deleteAccountPreDialog.e911Check3);
+					}
+
+					preDeletePopup.find('tr.numbers-check .pre-dialog-loader').css('display', 'none');
+					if (!!numbersExists) {
+						preDeletePopup.find('tr.numbers-check .pre-dialog-x').css('display', 'block');
+						preDeletePopup.find('tr.numbers-check .pre-dialog-message')
+							.html(self.i18n.active().deleteAccountPreDialog.numbersCheck2
+							.replace('{{word1}}', (numbersExists > 1)
+								? self.i18n.active().deleteAccountPreDialog.pluralWords[0]
+								: self.i18n.active().deleteAccountPreDialog.singularWords[0])
+							.replace('{{count}}', numbersExists)
+							.replace('{{word2}}', (numbersExists > 1) 
+								? self.i18n.active().deleteAccountPreDialog.pluralWords[1]
+								: self.i18n.active().deleteAccountPreDialog.singularWords[1])
+							);
+					} else {
+						preDeletePopup.find('tr.numbers-check .pre-dialog-check').css('display', 'block');
+						preDeletePopup.find('tr.numbers-check .pre-dialog-message')
+							.html(self.i18n.active().deleteAccountPreDialog.numbersCheck3);
+					}
+
+					if (!e911Exists && !numbersExists) {
+						preDeletePopup.find('#confirm_button').prop('disabled', false);
+					}
+				}
+				
+				self.callApi({
+					resource: 'numbers.listAll',
+					data: {
+						generateError: false,
+						filters: { paginate: false },
+						accountId: accountData.id
+					},
+					success: (rsp) => performChecks(false, rsp.data.numbers || {}),
+					error: (rsp) => performChecks(true, rsp.data.numbers)
 				});
 			});
 

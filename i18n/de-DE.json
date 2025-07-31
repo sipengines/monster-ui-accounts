@@ -214,6 +214,19 @@
 		"deleteMessageIntro": "Diese Aktion kann NICHT wieder rückgängig gemacht werden. Bei diesem Vorgang wird der Account \"{{variable}}\" dauerhaft gelöscht, alle Telefonnummern werden freigegeben, etwaige Mobilgeräte deaktiviert und Provisioning-Dateien entfernt.",
 		"deleteMessageExplanation": "Bitte geben Sie das Wort „{{variable}}“ in die folgende Eingabe ein, und klicken Sie dann auf die Schaltfläche „Account löschen“, um den Vorgang fortzusetzen."
 	},
+	"deleteAccountPreDialog": {
+		"title": "Ressourcenüberprüfung des Kontos",
+		"continueBtn": "Weiter",
+		"singularWords": ["ist", "Nummer"],
+		"pluralWords": ["sind", "Nummern"],
+		"e911Check1": "Überprüfen, ob e911‑Dienste vom Konto entfernt wurden...",
+		"e911Check2": "Es {{word1}} <strong>{{count}}</strong> {{word2}} mit aktivem e911‑Dienst. Bitte entferne alle e911‑Dienste, um fortzufahren.",
+		"e911Check3": "Keine e911‑Dienste mehr im Konto.",
+		"numbersCheck1": "Überprüfen, ob alle Nummern vom Konto entfernt wurden...",
+		"numbersCheck2": "Es {{word1}} <strong>{{count}}</strong> {{word2}} im Konto. Bitte entferne alle Nummern, um fortzufahren.",
+		"numbersCheck3": "Keine Nummern mehr im Konto.",
+		"apiError": "Beim Überprüfen der Kontoressourcen ist ein Fehler aufgetreten. Bitte versuche es später erneut."
+	},
 
 	"__comment": "UI-1609: Eine Möglichkeit zum Entfernen eines Guthabens hinzugefügt",
 	"__version": "3.21",
