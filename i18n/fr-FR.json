@@ -231,6 +231,8 @@
 		"numbersCheck1": "Vérification si tous les numéros ont été supprimés du compte…",
 		"numbersCheck2": "Il y a <strong>{{count}}</strong> {{word2}} dans le compte. Veuillez supprimer tous les numéros pour continuer.",
 		"numbersCheck3": "Aucun numéro restant dans le compte.",
+		"overrideDisclaimer": "By checking this box, you confirm that you have already verified these numbers are no longer with the current carriers and that this account is safe to delete, including the numbers.",
+		"deleteNumbersError": "Some numbers could not be deleted, so the account was not deleted. Please remove the remaining numbers and try again.",
 		"apiError": "Une erreur s’est produite lors de la vérification des ressources du compte. Veuillez réessayer plus tard."
 	},
 	"__comment": "UI-1609: Add a way to Remove Credit",

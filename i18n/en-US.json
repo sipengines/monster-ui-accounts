@@ -235,6 +235,8 @@
 		"numbersCheck1": "Verifying if all numbers have been removed from the account...",
 		"numbersCheck2": "There {{word1}} <strong>{{count}}</strong> {{word2}} remaining in the account. Please remove all numbers to proceed.",
 		"numbersCheck3": "No numbers remain in the account.",
+		"overrideDisclaimer": "By checking this box, you confirm that you have already verified these numbers are no longer with the current carriers and that this account is safe to delete, including the numbers.",
+		"deleteNumbersError": "Some numbers could not be deleted, so the account was not deleted. Please remove the remaining numbers and try again.",
 		"apiError": "An error occurred while checking account resources. Please try again later."
 	},
 	"__comment": "UI-1609: Add a way to Remove Credit",

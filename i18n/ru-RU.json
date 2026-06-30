@@ -233,6 +233,8 @@
 		"numbersCheck1": "Проверка: удалены ли все номера из аккаунта...",
 		"numbersCheck2": "В аккаунте {{word1}} <strong>{{count}}</strong> {{word2}}. Пожалуйста, удалите все номера, чтобы продолжить.",
 		"numbersCheck3": "Номера в аккаунте отсутствуют.",
+		"overrideDisclaimer": "By checking this box, you confirm that you have already verified these numbers are no longer with the current carriers and that this account is safe to delete, including the numbers.",
+		"deleteNumbersError": "Some numbers could not be deleted, so the account was not deleted. Please remove the remaining numbers and try again.",
 		"apiError": "Произошла ошибка при проверке ресурсов аккаунта. Пожалуйста, попробуйте позже."
 	},
 	"__comment": "UI-1609: Add a way to Remove Credit",

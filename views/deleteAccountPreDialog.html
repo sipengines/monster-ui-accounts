@@ -1,26 +1,44 @@
 <div class="delete-account-pre-dialog">
 	<table>
-        <tbody>
-            <tr class="e911-check">
-                <td>
-                    <span class="pre-dialog-loader"></span>
-                    <div class="pre-dialog-check"></div>
-                    <div class="pre-dialog-x"></div>
-                </td>
-                <td class="pre-dialog-message">
-                    {{ i18n.deleteAccountPreDialog.e911Check1 }}
-                </td>
-            </tr>
-            <tr class="numbers-check">
-                <td>
-                    <span class="pre-dialog-loader"></span>
-                    <div class="pre-dialog-check"></div>
-                    <div class="pre-dialog-x"></div>
-                </td>
-                <td class="pre-dialog-message">
-                    {{ i18n.deleteAccountPreDialog.numbersCheck1 }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+		<colgroup>
+			<col class="pre-dialog-status-column">
+			<col>
+		</colgroup>
+		<tbody>
+			<tr class="e911-check">
+				<td>
+					<span class="pre-dialog-loader"></span>
+					<div class="pre-dialog-check"></div>
+					<div class="pre-dialog-x"></div>
+				</td>
+				<td class="pre-dialog-message">
+					{{ i18n.deleteAccountPreDialog.e911Check1 }}
+				</td>
+			</tr>
+			<tr class="numbers-check">
+				<td>
+					<span class="pre-dialog-loader"></span>
+					<div class="pre-dialog-check"></div>
+					<div class="pre-dialog-x"></div>
+				</td>
+				<td class="pre-dialog-message">
+					{{ i18n.deleteAccountPreDialog.numbersCheck1 }}
+				</td>
+			</tr>
+			{{#isSuperDuper}}
+				{{#isPrivLevelAdmin}}
+					<tr class="override-check">
+						<td class="override-checkbox-cell">
+							<input type="checkbox" id="delete_account_numbers_override">
+						</td>
+						<td class="pre-dialog-message override-message">
+							<label class="delete-account-override-label" for="delete_account_numbers_override">
+								<span class="delete-account-override-disclaimer">{{ i18n.deleteAccountPreDialog.overrideDisclaimer }}</span>
+							</label>
+						</td>
+					</tr>
+				{{/isPrivLevelAdmin}}
+			{{/isSuperDuper}}
+		</tbody>
+	</table>
 </div>
