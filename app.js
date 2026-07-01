@@ -1354,28 +1354,78 @@ define(function(require) {
 			});
 
 			contentTemplate.find('#accountsmanager_delete_account_btn').on('click', function(e) {
+				var canOverrideNumberCheck = monster.util.isSuperDuper() && monster.util.isAdmin(),
+					overrideDisclaimer = _.get(self.i18n.active(), 'deleteAccountPreDialog.overrideDisclaimer')
+						|| 'By checking this box, you confirm that you have already verified these numbers are no longer with the current carriers and that this account is safe to delete, including the numbers.',
+					numbersToDelete = [],
+					shouldDeleteAccountNumbers = false,
+					checksPassed = false,
+					preDeletePopup,
+					updateConfirmButton = function() {
+						var overrideChecked = canOverrideNumberCheck
+							&& numbersToDelete.length > 0
+							&& shouldDeleteAccountNumbers;
+
+						preDeletePopup.find('#confirm_button').prop('disabled', !(checksPassed || overrideChecked));
+					},
+					deleteAccount = function() {
+						self.deleteAccount({
+							data: {
+								accountId: accountData.id,
+								generateError: false
+							},
+							success: function(data, status) {
+								parent.find('.main-content').empty();
+								parent.find('.account-list-element[data-id="' + accountData.id + '"]').remove();
+								parent.find('.account-browser-breadcrumbs .account-browser-breadcrumb').last().remove();
+							},
+							error: function(parsedError) {
+								if (parsedError.message === 'account_has_descendants') {
+									monster.ui.alert('error', self.i18n.active().account_has_descendants);
+								}
+							}
+						});
+					},
+					formatDeleteNumbersError = function(result) {
+						var i18n = self.i18n.active().deleteAccountPreDialog,
+							baseMessage = _.escape(i18n.deleteNumbersError),
+							unknownError = 'unknown error',
+							errors = _.get(result, 'error', {}),
+							errorDetails = _.map(errors, function(error, number) {
+								error = error || {};
+
+								var cause = error.cause || error.error || error.code || unknownError,
+									message = error.message && error.message !== cause ? ' (' + error.message + ')' : '';
+
+								return _.escape(number + ': ' + cause + message);
+							});
+
+						return errorDetails.length ? baseMessage + '<br><br>' + errorDetails.join('<br>') : baseMessage;
+					},
+					deleteAccountNumbersThenAccount = function() {
+						self.deleteAccountNumbers({
+							accountId: accountData.id,
+							numbers: numbersToDelete,
+							success: deleteAccount,
+							error: function(result) {
+								monster.ui.alert('error', formatDeleteNumbersError(result), null, {
+									htmlContent: true
+								});
+							}
+						});
+					};
+
 				// Perform account resource checks before calling the normal deletion routine
 				preDeletePopup = monster.ui.confirm(
 					$(self.getTemplate({name: 'deleteAccountPreDialog'})),
 					() => {
 						// proceed with normal deletion routine when the check is successful
 						self.confirmDeleteDialog(accountData.name, function() {
-							self.deleteAccount({
-								data: {
-									accountId: accountData.id,
-									generateError: false
-								},
-								success: function(data, status) {
-									parent.find('.main-content').empty();
-									parent.find('.account-list-element[data-id="' + accountData.id + '"]').remove();
-									parent.find('.account-browser-breadcrumbs .account-browser-breadcrumb').last().remove();
-								},
-								error: function(parsedError) {
-									if (parsedError.message === 'account_has_descendants') {
-										monster.ui.alert('error', self.i18n.active().account_has_descendants);
-									}
-								}
-							});
+							if (canOverrideNumberCheck && shouldDeleteAccountNumbers && numbersToDelete.length > 0) {
+								deleteAccountNumbersThenAccount();
+							} else {
+								deleteAccount();
+							}
 						});
 					},
 					null,
@@ -1387,20 +1437,26 @@ define(function(require) {
 				);
 
 				preDeletePopup.find('#confirm_button').prop('disabled', true);
+				preDeletePopup.find('.delete-account-override-disclaimer').text(overrideDisclaimer);
+				preDeletePopup.find('#delete_account_numbers_override').on('change', function() {
+					shouldDeleteAccountNumbers = $(this).is(':checked');
+					updateConfirmButton();
+				});
 				$('.ui-dialog .ui-dialog-title i.fa').removeClass('fa-question-circle');
 				$('.ui-dialog .ui-dialog-title i.fa').addClass('fa-list-ul');
 
 				const performChecks = (error, numbers) => {
-					
 					if (error) {
 						monster.ui.alert('error', self.i18n.active().deleteAccountPreDialog.apiError);
 						return;
 					}
 
 					let e911Exists = 0;
-					const numbersExists = Object.keys(numbers).length;
-					for (const number of Object.keys(numbers)) {
-						if (numbers[number].features.indexOf('e911') >= 0) e911Exists++;
+					numbers = numbers || {};
+					numbersToDelete = Object.keys(numbers);
+					const numbersExists = numbersToDelete.length;
+					for (const number of numbersToDelete) {
+						if (_.includes(_.get(numbers[number], 'features', []), 'e911')) e911Exists++;
 					}
 
 					preDeletePopup.find('tr.e911-check .pre-dialog-loader').css('display', 'none');
@@ -1435,15 +1491,19 @@ define(function(require) {
 								? self.i18n.active().deleteAccountPreDialog.pluralWords[1]
 								: self.i18n.active().deleteAccountPreDialog.singularWords[1])
 							);
+
+						if (canOverrideNumberCheck) {
+							preDeletePopup.find('tr.override-check').css('display', 'table-row');
+							preDeletePopup.find('#delete_account_numbers_override').prop('disabled', false).removeAttr('disabled');
+						}
 					} else {
 						preDeletePopup.find('tr.numbers-check .pre-dialog-check').css('display', 'block');
 						preDeletePopup.find('tr.numbers-check .pre-dialog-message')
 							.html(self.i18n.active().deleteAccountPreDialog.numbersCheck3);
 					}
 
-					if (!e911Exists && !numbersExists) {
-						preDeletePopup.find('#confirm_button').prop('disabled', false);
-					}
+					checksPassed = !e911Exists && !numbersExists;
+					updateConfirmButton();
 				}
 				
 				self.callApi({
@@ -1454,7 +1514,7 @@ define(function(require) {
 						accountId: accountData.id
 					},
 					success: (rsp) => performChecks(false, rsp.data.numbers || {}),
-					error: (rsp) => performChecks(true, rsp.data.numbers)
+					error: (rsp) => performChecks(true, _.get(rsp, 'data.numbers', {}))
 				});
 			});
 
@@ -2491,6 +2551,43 @@ define(function(require) {
 			}
 
 			self.callApi(apiData);
+		},
+
+		deleteAccountNumbers: function(args) {
+			var self = this,
+				numbers = args.numbers || [];
+
+			if (!numbers.length) {
+				args.hasOwnProperty('success') && args.success({});
+				return;
+			}
+
+			self.callApi({
+				resource: 'numbers.deleteBlockHard',
+				data: {
+					accountId: args.accountId,
+					data: {
+						numbers: numbers
+					},
+					generateError: false
+				},
+				success: function(data, status) {
+					var result = _.get(data, 'data', {}),
+						hasSummary = _.has(result, 'success') || _.has(result, 'error'),
+						successCount = _.keys(_.get(result, 'success', {})).length,
+						errorCount = _.keys(_.get(result, 'error', {})).length;
+
+					if (errorCount > 0 || (hasSummary && successCount !== numbers.length)) {
+						args.hasOwnProperty('error') && args.error(result);
+						return;
+					}
+
+					args.hasOwnProperty('success') && args.success(result);
+				},
+				error: function(parsedError) {
+					args.hasOwnProperty('error') && args.error(parsedError);
+				}
+			});
 		},
 
 		deleteAccount: function(args) {

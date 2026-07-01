@@ -225,6 +225,8 @@
 		"numbersCheck1": "Überprüfen, ob alle Nummern vom Konto entfernt wurden...",
 		"numbersCheck2": "Es {{word1}} <strong>{{count}}</strong> {{word2}} im Konto. Bitte entferne alle Nummern, um fortzufahren.",
 		"numbersCheck3": "Keine Nummern mehr im Konto.",
+		"overrideDisclaimer": "By checking this box, you confirm that you have already verified these numbers are no longer with the current carriers and that this account is safe to delete, including the numbers.",
+		"deleteNumbersError": "Some numbers could not be deleted, so the account was not deleted. Please remove the remaining numbers and try again.",
 		"apiError": "Beim Überprüfen der Kontoressourcen ist ein Fehler aufgetreten. Bitte versuche es später erneut."
 	},
 

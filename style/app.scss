@@ -1303,20 +1303,75 @@
 
 .delete-account-pre-dialog {
 	table {
+		table-layout: fixed;
 		width: 100%;
+
+		.pre-dialog-status-column {
+			width: 115px;
+		}
+
+		.pre-dialog-message {
+			text-align: left;
+			vertical-align: middle;
+		}
+
+		td:first-child {
+			padding-right: 10px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
 		tr.e911-check {
 			td {
-				padding-right: 10px;
 				padding-bottom: 15px;
-				text-align: left;
 			}
 		}
 		tr.numbers-check {
 			td {
 				padding-right: 10px;
-				text-align: left;
+			}
+		}
+
+		tr.e911-check,
+		tr.numbers-check {
+			td:first-child > * {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+
+		tr.override-check {
+			display: none;
+
+			.override-checkbox-cell {
+				padding-top: 19px;
+				vertical-align: top;
+
+				input {
+					margin: 5px 0 0;
+					cursor: pointer;
+				}
+			}
+
+			.override-message {
+				padding-top: 18px;
+				padding-right: 10px;
+				vertical-align: top;
+			}
+
+			.delete-account-override-label {
+				display: block;
+				margin: 0;
+				color: inherit;
+				font-size: inherit;
+				font-weight: normal;
+				line-height: inherit;
+				cursor: pointer;
+			}
+
+			.delete-account-override-disclaimer {
+				display: block;
 			}
 		}
 	}
 }
-
